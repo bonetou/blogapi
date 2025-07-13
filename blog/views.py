@@ -1,14 +1,16 @@
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from http import HTTPMethod
+
 from django.db.models import Count, Prefetch
+from rest_framework import generics
+from rest_framework.permissions import AllowAny, IsAuthenticated
+
 from .models import BlogPost, Comment
 from .serializers import (
     BlogPostCreateSerializer,
-    BlogPostListSerializer,
     BlogPostDetailSerializer,
+    BlogPostListSerializer,
     CommentSerializer,
 )
-from http import HTTPMethod
 
 
 class BlogPostListCreateView(generics.ListCreateAPIView):

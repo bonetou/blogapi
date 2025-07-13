@@ -1,7 +1,9 @@
+import uuid
+
 import pytest
 from rest_framework.test import APIClient
+
 from blog.models import BlogPost, Comment
-import uuid
 
 pytestmark = pytest.mark.django_db
 
