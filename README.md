@@ -19,25 +19,34 @@ cd blogapi
 
 ### 2. Create and activate a virtual environment
 
-Using venv:
+```bash
+uv venv --python 3.12
+```
+Or Just
 
 ```bash
 python -m venv .venv
+```
+
+Activate the virtual environment:
+```bash
 source .venv/bin/activate
+```
+For Windows users, use:
+```bash
+# For Windows users
+.\.venv\Scripts\activate
 ```
 
 ### 3. Install dependencies
 
-Using uv:
-
-```bash
-uv pip install -r requirements.txt
-```
-
-Or using pip:
-
 ```bash
 pip install -r requirements.txt
+```
+
+or using uv:
+```bash
+uv pip install -r requirements.txt
 ```
 
 ### 4. Configure environment variables
@@ -57,8 +66,8 @@ docker compose up -d db
 ### 6. Run migrations
 
 ```bash
-python manage.py makemigrations
-python manage.py migrate
+make make-migrations
+make migrate
 ```
 
 ### 7. Create a superuser
@@ -70,12 +79,12 @@ python manage.py createsuperuser
 ### 8. Run the development server
 
 ```bash
-python manage.py runserver
+make runserver
 ```
 
 ### 9. Access the application
 
-* Swagger UI: [http://localhost:8000/api/swagger](http://localhost:8000/api/swagger)
+* Swagger UI: [http://localhost:8000/v1/api/swagger](http://localhost:8000/v1/api/swagger)
 
 ## JWT Authentication
 
@@ -86,6 +95,12 @@ Obtain a token:
 curl -X POST http://localhost:8000/v1/api/token/ \
   -H "Content-Type: application/json" \
   -d '{"username": "testuser", "password": "testpass123"}'
+
+# This will return a JSON response with an access token.
+#{
+#  "access": "your_access_token",
+#  "refresh": "your_refresh_token"
+#}
 ```
 
 Use the token:
@@ -98,7 +113,7 @@ curl http://localhost:8000/v1/api/posts/ \
 ## Running Tests
 
 ```bash
-pytest
+make test
 ```
 
 ## Linting
