@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.db.models import Count, Prefetch
 from .models import BlogPost, Comment
 from .serializers import (
@@ -7,11 +8,15 @@ from .serializers import (
     BlogPostDetailSerializer,
     CommentSerializer,
 )
-
 from http import HTTPMethod
 
+
 class BlogPostListCreateView(generics.ListCreateAPIView):
-    serializer_class = BlogPostListSerializer
+    def get_permissions(self):
+        if self.request.method == HTTPMethod.GET:
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
     def get_serializer_class(self):
         if self.request.method == HTTPMethod.POST:
             return BlogPostCreateSerializer
@@ -19,19 +24,20 @@ class BlogPostListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return (
-            BlogPost.objects
-            .annotate(comments_count=Count("comments"))
+            BlogPost.objects.annotate(comments_count=Count("comments"))
             .prefetch_related(Prefetch("comments"))
             .order_by("-created_at")
         )
 
 
 class BlogPostRetrieveView(generics.RetrieveAPIView):
+    permission_classes = [AllowAny]
     serializer_class = BlogPostDetailSerializer
     queryset = BlogPost.objects.prefetch_related("comments")
 
 
 class CommentCreateView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = CommentSerializer
 
     def perform_create(self, serializer):
@@ -41,6 +47,7 @@ class CommentCreateView(generics.CreateAPIView):
 
 
 class CommentListView(generics.ListAPIView):
+    permission_classes = [AllowAny]
     serializer_class = CommentSerializer
 
     def get_queryset(self):
